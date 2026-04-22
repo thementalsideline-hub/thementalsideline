@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Sideline Wall -- The Mental Sideline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #3ecfcf;
+      --teal-dark: #29a8a8;
+      --teal-light: #a8f0f0;
+      --pink: #f25ca2;
+      --black: #0e0e0e;
+      --white: #fafafa;
+      --gray: #888;
+      --card-bg: #161616;
+      --card-border: #2c2c2c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #1e1e1e;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem; color: var(--white);
+      text-decoration: none; letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--pink); }
+    .nav-back {
+      font-size: 0.85rem; font-weight: 500; color: var(--gray);
+      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--teal); }
+
+    /* HERO */
+    .hero {
+      padding: 8rem 2rem 3rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(242,92,162,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: #1a1a1a; border: 1.5px solid var(--card-border);
+      color: var(--teal); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 0.35rem 1rem; border-radius: 999px; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      line-height: 0.92; margin-bottom: 1.2rem;
+    }
+    .hero h1 span { color: var(--pink); }
+    .hero p {
+      font-size: 1rem; font-weight: 300; color: var(--gray);
+      max-width: 480px; margin: 0 auto 1rem; line-height: 1.7;
+    }
+    .hero-note {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #1a1a1a; border: 1px solid var(--card-border);
+      border-radius: 999px; padding: 0.4rem 1rem;
+      font-size: 0.78rem; color: var(--gray);
+    }
+
+    /* SUBMIT SECTION */
+    .submit-section {
+      max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+    }
+    .submit-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 1.5rem; padding: 2rem;
+      transition: border-color 0.3s;
+    }
+    .submit-card:focus-within { border-color: var(--teal); }
+    .submit-card textarea {
+      width: 100%; background: transparent; border: none;
+      color: var(--white); font-family: 'DM Sans', sans-serif;
+      font-size: 1.05rem; font-weight: 300; line-height: 1.7;
+      resize: none; outline: none; min-height: 120px;
+    }
+    .submit-card textarea::placeholder { color: #444; }
+    .submit-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1.5rem; padding-top: 1rem;
+      border-top: 1px solid var(--card-border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .sport-select {
+      background: #1e1e1e; border: 1.5px solid var(--card-border);
+      color: var(--gray); font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; padding: 0.5rem 0.9rem;
+      border-radius: 999px; cursor: pointer; outline: none;
+      transition: border-color 0.2s;
+    }
+    .sport-select:focus { border-color: var(--teal); }
+    .char-count { font-size: 0.78rem; color: #444; }
+    .char-count.warn { color: var(--pink); }
+    .submit-btn {
+      background: var(--pink); color: var(--white);
+      border: none; padding: 0.65rem 1.5rem;
+      border-radius: 999px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .submit-btn:hover:not(:disabled) { background: #d94b8e; transform: scale(1.04); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* MODERATION STATUS */
+    .mod-status {
+      display: none; text-align: center;
+      padding: 1rem; font-size: 0.9rem; color: var(--gray);
+    }
+    .mod-status.show { display: block; }
+    .mod-status .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid #333; border-top-color: var(--teal);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      margin-right: 0.5rem; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* WALL */
+    .wall-section {
+      max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 6rem;
+    }
+    .wall-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .wall-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+    }
+    .wall-header h2 span { color: var(--teal); }
+    .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: #1a1a1a; border: 1.5px solid var(--card-border);
+      color: var(--gray); font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.9rem;
+      border-radius: 999px; cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--teal); color: var(--teal); background: rgba(62,207,207,0.08);
+    }
+
+    /* MASONRY GRID */
+    .wall-grid { columns: 3; column-gap: 1.2rem; }
+    @media (max-width: 900px) { .wall-grid { columns: 2; } }
+    @media (max-width: 560px) { .wall-grid { columns: 1; } }
+
+    .confession-card {
+      break-inside: avoid;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 1.2rem; padding: 1.4rem 1.5rem;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.25s, transform 0.25s;
+      animation: fadeUp 0.5s ease both;
+      position: relative; overflow: hidden;
+    }
+    .confession-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent-color, var(--teal));
+      opacity: 0.7;
+    }
+    .confession-card:hover { border-color: #3a3a3a; transform: translateY(-3px); }
+    .confession-text {
+      font-size: 0.97rem; font-weight: 300; line-height: 1.75;
+      color: #ddd; margin-bottom: 1rem; font-style: italic;
+    }
+    .confession-text::before {
+      content: '\201C'; color: var(--pink);
+      font-size: 1.4rem; line-height: 0;
+      vertical-align: -0.3em; margin-right: 0.1em;
+    }
+    .confession-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .sport-tag {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.2rem 0.7rem;
+      border-radius: 999px; background: #1e1e1e;
+      color: var(--tag-color, var(--teal));
+      border: 1px solid var(--tag-color, var(--teal));
+    }
+    .confession-time { font-size: 0.72rem; color: #444; margin-top: 0.6rem; display: block; }
+    .heart-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.78rem; color: #555;
+      transition: color 0.2s; padding: 0;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .heart-btn:hover { color: var(--pink); }
+    .heart-btn.liked { color: var(--pink); }
+    .heart-btn .heart { font-size: 0.9rem; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem; color: #444;
+      column-span: all;
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card-bg); border: 1.5px solid var(--card-border);
+      color: var(--white); padding: 0.75rem 1.5rem;
+      border-radius: 999px; font-size: 0.88rem; font-weight: 500;
+      transition: transform 0.3s ease; z-index: 999;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--teal); color: var(--teal); }
+    .toast.error { border-color: var(--pink); color: var(--pink); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-footer {
+      text-align: center; padding: 2rem;
+      border-top: 1px solid #1a1a1a;
+      font-size: 0.78rem; color: #444;
+    }
+    .page-footer a { color: var(--teal); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .submit-section { padding: 1.5rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">The Mental<span>Sideline</span></a>
+    <a href="index.html" class="nav-back">← Back to home</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-tag">Anonymous Community Wall</div>
+    <h1>The Sideline <span>Wall</span></h1>
+    <p>This is a space to say what you can't say out loud. No names. No judgment. Just athletes being honest.</p>
+    <div class="hero-note">🔒 100% anonymous -- nothing you share is ever tied to you</div>
+  </section>
+
+  <div class="submit-section">
+    <div class="submit-card">
+      <textarea id="confession-input" maxlength="400" placeholder="What's been on your mind lately? Something you wish your coach knew. Something your teammates don't see. Anything."></textarea>
+      <div class="submit-footer">
+        <select class="sport-select" id="sport-select">
+          <option value="Athlete">Just an athlete</option>
+          <option value="Soccer">Soccer</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Track & Field">Track & Field</option>
+          <option value="Volleyball">Volleyball</option>
+          <option value="Tennis">Tennis</option>
+          <option value="Gymnastics">Gymnastics</option>
+          <option value="Baseball/Softball">Baseball/Softball</option>
+          <option value="Football">Football</option>
+          <option value="Lacrosse">Lacrosse</option>
+          <option value="Cross Country">Cross Country</option>
+          <option value="Rowing">Rowing</option>
+          <option value="Other">Other</option>
+        </select>
+        <span class="char-count" id="char-count">0 / 400</span>
+        <button class="submit-btn" id="submit-btn" onclick="submitConfession()">
+          Post anonymously →
+        </button>
+      </div>
+    </div>
+    <div class="mod-status" id="mod-status">
+      <span class="spinner"></span> Reviewing your post before it goes live...
+    </div>
+  </div>
+
+  <section class="wall-section">
+    <div class="wall-header">
+      <h2>From the <span>Wall</span></h2>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+        <button class="filter-btn" onclick="filterCards('Soccer', this)">Soccer</button>
+        <button class="filter-btn" onclick="filterCards('Swimming', this)">Swimming</button>
+        <button class="filter-btn" onclick="filterCards('Basketball', this)">Basketball</button>
+        <button class="filter-btn" onclick="filterCards('Track & Field', this)">Track</button>
+        <button class="filter-btn" onclick="filterCards('Gymnastics', this)">Gymnastics</button>
+      </div>
+    </div>
+    <div class="wall-grid" id="wall-grid"></div>
+  </section>
+
+  <footer class="page-footer">
+    If you're struggling, you don't have to go through it alone. <a href="https://www.crisistextline.org" target="_blank">Crisis Text Line: text HOME to 741741</a>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const sportColors = {
+      'Soccer':           { accent: '#3ecfcf', tag: '#3ecfcf' },
+      'Basketball':       { accent: '#f25ca2', tag: '#f25ca2' },
+      'Swimming':         { accent: '#60b8ff', tag: '#60b8ff' },
+      'Track & Field':    { accent: '#ffd166', tag: '#ffd166' },
+      'Volleyball':       { accent: '#a78bfa', tag: '#a78bfa' },
+      'Tennis':           { accent: '#3ecfcf', tag: '#3ecfcf' },
+      'Gymnastics':       { accent: '#f25ca2', tag: '#f25ca2' },
+      'Baseball/Softball':{ accent: '#ffd166', tag: '#ffd166' },
+      'Football':         { accent: '#ff9f43', tag: '#ff9f43' },
+      'Lacrosse':         { accent: '#3ecfcf', tag: '#3ecfcf' },
+      'Cross Country':    { accent: '#a8f0f0', tag: '#a8f0f0' },
+      'Rowing':           { accent: '#60b8ff', tag: '#60b8ff' },
+      'Athlete':          { accent: '#3ecfcf', tag: '#3ecfcf' },
+      'Other':            { accent: '#888',    tag: '#888'    },
+    };
+
+    const seedPosts = [
+      { id: 's1', text: "I smile at practice every day but go home and cry. I don't know how to tell my coach I'm not okay.", sport: 'Swimming', time: '2 days ago', likes: 34, liked: false },
+      { id: 's2', text: "My whole identity is being an athlete. I don't know who I am when the season ends.", sport: 'Soccer', time: '3 days ago', likes: 51, liked: false },
+      { id: 's3', text: "I got injured and felt relieved. That scared me more than the injury.", sport: 'Track & Field', time: '1 week ago', likes: 89, liked: false },
+      { id: 's4', text: "Everyone tells me I should be grateful for my scholarship. I am. I'm also exhausted and lonely.", sport: 'Basketball', time: '4 days ago', likes: 62, liked: false },
+      { id: 's5', text: "I quit a sport I loved because the culture was toxic. Still grieving it two years later.", sport: 'Volleyball', time: '5 days ago', likes: 47, liked: false },
+      { id: 's6', text: "My parents drove 4 hours to watch me compete and I had a panic attack in the warm-up area.", sport: 'Gymnastics', time: '1 week ago', likes: 38, liked: false },
+      { id: 's7', text: "I've been playing through pain for two seasons because I'm scared of losing my spot.", sport: 'Soccer', time: '6 days ago', likes: 55, liked: false },
+      { id: 's8', text: "Nobody talks about how lonely it is to be a high-performing athlete. Surrounded by people but completely alone.", sport: 'Athlete', time: '2 weeks ago', likes: 103, liked: false },
+    ];
+
+    let posts = [];
+    let currentFilter = 'all';
+
+    async function loadPosts() {
+      try {
+        const result = await window.storage.get('wall-posts');
+        posts = result ? JSON.parse(result.value) : [...seedPosts];
+        if (!result) await savePosts();
+      } catch {
+        posts = [...seedPosts];
+      }
+      renderWall();
+    }
+
+    async function savePosts() {
+      try { await window.storage.set('wall-posts', JSON.stringify(posts)); }
+      catch (e) { console.error(e); }
+    }
+
+    const input = document.getElementById('confession-input');
+    const charCount = document.getElementById('char-count');
+    input.addEventListener('input', () => {
+      const len = input.value.length;
+      charCount.textContent = `${len} / 400`;
+      charCount.classList.toggle('warn', len > 350);
+    });
+
+    async function submitConfession() {
+      const text = input.value.trim();
+      if (!text || text.length < 10) { showToast('Write a little more before posting.', 'error'); return; }
+
+      const btn = document.getElementById('submit-btn');
+      const modStatus = document.getElementById('mod-status');
+      btn.disabled = true;
+      modStatus.classList.add('show');
+
+      let approved = true;
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 100,
+            messages: [{
+              role: 'user',
+              content: `You are a content moderator for a mental health community for student athletes. Respond ONLY with JSON: {"approved": true} or {"approved": false, "reason": "brief reason"}.
+
+Approve: genuine emotions, struggles, burnout, pressure, anxiety, grief, loneliness -- even heavy content.
+Reject ONLY: hate speech, harassment, explicit sexual content, spam, or targeted attacks on specific individuals.
+Do NOT reject posts about mental health struggles, suicidal feelings, or dark emotions -- these are exactly why this space exists.
+
+Post: "${text}"`
+            }]
+          })
+        });
+        const data = await response.json();
+        const raw = data.content.map(i => i.text || '').join('').replace(/```json|```/g, '').trim();
+        const result = JSON.parse(raw);
+        approved = result.approved;
+        if (!approved) {
+          showToast('This post could not go live: ' + (result.reason || 'please review your content.'), 'error');
+        }
+      } catch {
+        approved = true; // fail open
+      }
+
+      modStatus.classList.remove('show');
+
+      if (approved) {
+        const sport = document.getElementById('sport-select').value;
+        posts.unshift({ id: 'p' + Date.now(), text, sport, time: 'Just now', likes: 0, liked: false });
+        await savePosts();
+        input.value = '';
+        charCount.textContent = '0 / 400';
+        renderWall();
+        showToast('Your post is live. 💙', 'success');
+      }
+
+      btn.disabled = false;
+    }
+
+    function renderWall() {
+      const grid = document.getElementById('wall-grid');
+      const filtered = currentFilter === 'all' ? posts : posts.filter(p => p.sport === currentFilter);
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="icon">🌊</div><p>No posts yet for this filter.<br>Be the first to share.</p></div>`;
+        return;
+      }
+      grid.innerHTML = filtered.map(post => {
+        const c = sportColors[post.sport] || sportColors['Athlete'];
+        return `<div class="confession-card" style="--accent-color:${c.accent};--tag-color:${c.tag}">
+          <p class="confession-text">${escapeHtml(post.text)}</p>
+          <div class="confession-meta">
+            <span class="sport-tag">${escapeHtml(post.sport)}</span>
+            <button class="heart-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+              <span class="heart">${post.liked ? '♥' : '♡'}</span> ${post.likes}
+            </button>
+          </div>
+          <span class="confession-time">${escapeHtml(post.time)}</span>
+        </div>`;
+      }).join('');
+    }
+
+    async function toggleLike(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+      post.liked = !post.liked;
+      post.likes += post.liked ? 1 : -1;
+      await savePosts();
+      renderWall();
+    }
+
+    function filterCards(sport, btn) {
+      currentFilter = sport;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderWall();
+    }
+
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submitConfession(); });
+
+    loadPosts();
+  </script>
+</body>
+</html>

@@ -204,6 +204,27 @@
       font-size: 1.4rem; line-height: 0;
       vertical-align: -0.3em; margin-right: 0.1em;
     }
+    .post-response {
+      background: #0d2620;
+      border-left: 3px solid var(--teal);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .response-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .post-response p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #ccc;
+      font-style: normal;
+    }
     .confession-meta {
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 0.5rem;
@@ -451,8 +472,15 @@ Post: "${text}"`
       }
       grid.innerHTML = filtered.map(post => {
         const c = sportColors[post.sport] || sportColors['Athlete'];
+        const responseHtml = post.response_approved && post.response ? `
+          <div class="post-response">
+            <div class="response-label">💙 From The Mental Sideline</div>
+            <p>${escapeHtml(post.response)}</p>
+          </div>
+        ` : '';
         return `<div class="confession-card" style="--accent-color:${c.accent};--tag-color:${c.tag}">
           <p class="confession-text">${escapeHtml(post.text)}</p>
+          ${responseHtml}
           <div class="confession-meta">
             <span class="sport-tag">${escapeHtml(post.sport)}</span>
             <button class="heart-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
@@ -523,7 +551,9 @@ Post: "${text}"`
           sport: p.sport || 'Athlete',
           time: timeAgo(p.created_at),
           likes: p.likes || 0,
-          liked: false
+          liked: false,
+          response: p.response,
+          response_approved: p.response_approved
         }));
       } catch (e) {
         console.error('Supabase error:', e);

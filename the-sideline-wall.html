@@ -493,7 +493,6 @@ Post: "${text}"`
 
     input.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submitConfession(); });
 
-    loadPosts();
   </script>
   <script>
     // ── Supabase connection ──
@@ -515,7 +514,6 @@ Post: "${text}"`
       return res.json();
     }
 
-    // Override loadPosts to use Supabase
     async function loadPosts() {
       try {
         const data = await supabaseRequest('posts?order=created_at.desc&limit=50');
@@ -527,17 +525,15 @@ Post: "${text}"`
           likes: p.likes || 0,
           liked: false
         }));
-      } catch {
+      } catch (e) {
+        console.error('Supabase error:', e);
         posts = [...seedPosts];
       }
       renderWall();
     }
 
-    // Override savePosts -- not needed with Supabase
     async function savePosts() {}
 
-    // Override submitConfession to save to Supabase
-    const originalSubmit = submitConfession;
     async function submitConfession() {
       const text = input.value.trim();
       if (!text || text.length < 10) { showToast('Write a little more before posting.', 'error'); return; }
@@ -586,7 +582,6 @@ Post: "${text}"`
       btn.disabled = false;
     }
 
-    // Override toggleLike to update Supabase
     async function toggleLike(id) {
       const post = posts.find(p => p.id === id);
       if (!post) return;

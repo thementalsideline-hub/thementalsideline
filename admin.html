@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - The Mental Sideline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #ffffff;
+      --gray: #a0a0a0;
+      --teal: #3ecfcf;
+      --pink: #f25ca2;
+      --card-bg: #1a1a1a;
+      --card-border: #2a2a2a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .header {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    .header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header h1 span { color: var(--pink); }
+
+    .header p {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    .password-gate {
+      max-width: 400px;
+      margin: 10rem auto;
+      text-align: center;
+    }
+
+    .password-gate h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .password-gate input {
+      width: 100%;
+      padding: 1rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 0.5rem;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .password-gate input:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+
+    .password-gate button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--pink);
+      border: none;
+      border-radius: 0.5rem;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .password-gate button:hover {
+      background: #d94b8e;
+      transform: scale(1.02);
+    }
+
+    .error {
+      color: var(--pink);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .dashboard {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .dashboard.active { display: block; }
+
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--gray);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-btn.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    .posts-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .post-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .sport-tag {
+      background: var(--teal);
+      color: var(--black);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .post-meta {
+      color: var(--gray);
+      font-size: 0.8rem;
+    }
+
+    .post-text {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+    }
+
+    .response-section {
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.5rem;
+    }
+
+    .response-section h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--pink);
+      margin-bottom: 1rem;
+    }
+
+    .response-section textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 1rem;
+      background: #0f0f0f;
+      border: 2px solid var(--card-border);
+      border-radius: 0.5rem;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      resize: vertical;
+      margin-bottom: 1rem;
+    }
+
+    .response-section textarea:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+
+    .response-section textarea::placeholder {
+      color: #555;
+    }
+
+    .response-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 999px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-approve {
+      background: var(--pink);
+      color: var(--white);
+    }
+
+    .btn-approve:hover {
+      background: #d94b8e;
+      transform: scale(1.05);
+    }
+
+    .btn-approve:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .existing-response {
+      background: #0f0f0f;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .existing-response p {
+      color: var(--white);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .existing-response .badge {
+      display: inline-block;
+      background: var(--teal);
+      color: var(--black);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--gray);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .header h1 { font-size: 2rem; }
+      .posts-grid { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div class="password-gate" id="password-gate">
+    <h2>Admin Access</h2>
+    <p style="color: var(--gray); margin-bottom: 1.5rem;">Enter your password to access the dashboard</p>
+    <input type="password" id="password-input" placeholder="Password" />
+    <button onclick="checkPassword()">Unlock Dashboard</button>
+    <p class="error" id="password-error"></p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <div class="header">
+      <h1>Admin <span>Dashboard</span></h1>
+      <p>Review posts and provide supportive responses with resources</p>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterPosts('all')">All Posts</button>
+      <button class="filter-btn" onclick="filterPosts('no-response')">Needs Response</button>
+      <button class="filter-btn" onclick="filterPosts('has-response')">Has Response</button>
+    </div>
+
+    <div class="posts-grid" id="posts-grid">
+      <!-- Posts populated here -->
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://uhbpnahxkguxxbwdstqd.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoYnBuYWh4a2d1eHhid2RzdHFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MDA4MDAsImV4cCI6MjA5MjQ3NjgwMH0.9E10UwMEwb89GjJQzFwkgvxpYl_Ss8mL72hcQMaYdOg';
+    const ADMIN_PASSWORD = 'mentalsideline2025'; // Change this to your own password!
+
+    let allPosts = [];
+    let currentFilter = 'all';
+
+    async function supabaseRequest(path, options = {}) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+          ...options.headers
+        },
+        ...options
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('password-input');
+      const error = document.getElementById('password-error');
+      
+      if (input.value === ADMIN_PASSWORD) {
+        document.getElementById('password-gate').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+        loadPosts();
+      } else {
+        error.textContent = 'Incorrect password';
+        input.value = '';
+      }
+    }
+
+    document.getElementById('password-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    async function loadPosts() {
+      try {
+        const data = await supabaseRequest('posts?order=created_at.desc');
+        allPosts = data;
+        renderPosts();
+      } catch (e) {
+        console.error('Error loading posts:', e);
+      }
+    }
+
+    function filterPosts(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderPosts();
+    }
+
+    function renderPosts() {
+      const grid = document.getElementById('posts-grid');
+      
+      let filtered = allPosts;
+      if (currentFilter === 'no-response') {
+        filtered = allPosts.filter(p => !p.response_approved);
+      } else if (currentFilter === 'has-response') {
+        filtered = allPosts.filter(p => p.response_approved);
+      }
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>No posts found for this filter.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(post => `
+        <div class="post-card">
+          <div class="post-header">
+            <span class="sport-tag">${escapeHtml(post.sport || 'Athlete')}</span>
+            <span class="post-meta">${timeAgo(post.created_at)} • ${post.likes || 0} likes</span>
+          </div>
+          <p class="post-text">${escapeHtml(post.text)}</p>
+          
+          <div class="response-section">
+            ${post.response_approved ? `
+              <div class="existing-response">
+                <span class="badge">✓ Published Response</span>
+                <p>${escapeHtml(post.response)}</p>
+              </div>
+            ` : `
+              <h4>Write Your Response</h4>
+              <textarea 
+                id="response-${post.id}" 
+                placeholder="Write a supportive message with resources... Be empathetic, validate their feelings, and share helpful resources like crisis lines, coping strategies, or mental health info."
+              >${post.response || ''}</textarea>
+              <div class="response-actions">
+                <button class="btn btn-approve" onclick="approveResponse(${post.id})">
+                  Publish Response
+                </button>
+              </div>
+            `}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function approveResponse(postId) {
+      const textarea = document.getElementById(`response-${postId}`);
+      const response = textarea.value.trim();
+      
+      if (!response) {
+        alert('Please write a response first!');
+        return;
+      }
+
+      try {
+        await supabaseRequest(`posts?id=eq.${postId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ 
+            response: response,
+            response_approved: true 
+          })
+        });
+        
+        await loadPosts();
+        alert('Response published! ✓');
+      } catch (e) {
+        console.error('Error:', e);
+        alert('Failed to publish response. Try again!');
+      }
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function timeAgo(dateStr) {
+      const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+      if (diff < 60) return 'Just now';
+      if (diff < 3600) return `${Math.floor(diff/60)} min ago`;
+      if (diff < 86400) return `${Math.floor(diff/3600)} hours ago`;
+      return `${Math.floor(diff/86400)} days ago`;
+    }
+  </script>
+
+</body>
+</html>

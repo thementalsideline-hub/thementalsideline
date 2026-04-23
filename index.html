@@ -670,9 +670,58 @@
     }
     .success-msg p { font-size: 0.9rem; color: var(--gray); }
 
+    /* ── MOBILE MENU ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--black);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 2px solid var(--teal);
+      padding: 1rem 2rem;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gray);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .nav-cta {
+      background: var(--pink);
+      color: var(--white) !important;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      text-align: center;
+      border: none !important;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav ul { display: none; }
+      .hamburger { display: flex; }
       .hero, .mission, .join { grid-template-columns: 1fr; padding: 5rem 1.5rem 3rem; gap: 2.5rem; }
       .hero-visual { order: -1; }
       .blog-grid { grid-template-columns: 1fr; }
@@ -696,7 +745,20 @@
       <li><a href="https://instagram.com/thementalsideline" target="_blank" class="nav-cta" style="background:var(--pink);">📱 Follow on Instagram</a></li>
       <li><a href="#join" class="nav-cta">Join the Network</a></li>
     </ul>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#mission" onclick="closeMenu()">About</a>
+    <a href="#blog" onclick="closeMenu()">Blog</a>
+    <a href="#spotlight" onclick="closeMenu()">Athletes</a>
+    <a href="the-sideline-wall.html">🖤 The Wall</a>
+    <a href="https://instagram.com/thementalsideline" target="_blank">📱 Instagram</a>
+    <a href="#join" onclick="closeMenu()" class="nav-cta">Join the Network</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -889,6 +951,14 @@
   </footer>
 
   <script>
+    // ── Mobile menu ──
+    function toggleMenu() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+    }
+
     // ── Join form ──
 
     // ── Medium RSS feed ──
